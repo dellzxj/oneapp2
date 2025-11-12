@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>环境监测系统</title>
+<!--    <link rel="stylesheet" href="js/bstable/css/bootstrap.min.css"/>-->
+<!--    <link rel="stylesheet" href="js/bstable/css/bootstrap-table.css"/>-->
+    <link rel="stylesheet" href="css/base.css">
+    <link href="css/zTreeStyle/zTreeStyle.css" rel="stylesheet" type="text/css" />
+    <style>
+        #soilMoistureTable {
+            margin-left: 15px;
+            margin-top: 25px;
+            font-size: 12.5px;
+            color: yellow;
+            border: 1px solid white; /* 设置表格的边框颜色为白色，粗细为1px */
+            border-collapse: collapse;
+        }
+        #soilMoistureTable th {
+            color: white;
+            font-size: 16px;
+            width: 20%;
+        }
+        #soilMoistureTable td {
+            border: 1px solid white; /* 设置单元格的边框颜色为白色，粗细为1px */
+            height: 30px;
+            text-align: center;
+        }
+        .centered-text {
+            font-size: 28px; /* 字体大小 */
+            color: yellow;   /* 字体颜色 */
+            text-align: center; /* 居中对齐 */
+            margin-top: 10px; /* 上边距 */
+            margin-right: 80px;
+        }
+        /* 新增的方格样式 */
+        #gridTable {
+            margin-top: 25px;
+            margin-left: 15px;
+            border: 1px solid white; /* 设置边框颜色 */
+            border-collapse: collapse;
+        }
+        #gridTable th, #gridTable td {
+            border: 1px solid white; /* 设置单元格的边框颜色 */
+            width: 50px; /* 单元格宽度 */
+            height: 50px; /* 单元格高度 */
+            text-align: center;
+            color: white; /* 字体颜色 */
+        }
+    </style>
+</head>
+<body>
+<!--顶部-->
+<header class="header left">
+    <div class="left nav">
+        <ul>
+            <li><i class="nav_1"></i><a href="index.html">作业信息系统 </a> </li>
+            <li><i class="nav_2"></i><a href="carContrl.html">作业监控系统</a> </li>
+        </ul>
+    </div>
+    <div class="header_center left">
+        <h2><strong>环境监测系统</strong></h2>
+        <p class="color_font"><small>环境监测系统</small></p>
+    </div>
+    <div class="right nav text_right">
+        <ul>
+            <li><i class="nav_7"></i><a href="environmental.html">环境监测系统</a> </li>
+            <li><i class="nav_8"></i><a href="irrigation.html">智慧灌溉系统</a> </li>
+        </ul>
+    </div>
+</header>
+<div class="clear"></div>
+<!--内容部分-->
+<div class="con1 left" id="car_control">
+    <div class="left_table left bow_shadow">
+        <p class="set_list"><i class="list_i"></i> 设备列表：</p>
+        <ul id="treeDemo" class="ztree"></ul>
+    </div>
+
+    <div class="right right_table">
+
+            <p class="centered-text">土壤墒情实时数据</p>
+        <div class="table_p table_p01">
+            <!-- 新增的方格表 -->
+            <table id="gridTable">
+                <thead>
+                <tr>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                    <td>4</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>6</td>
+                    <td>7</td>
+                    <td>8</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>10</td>
+                    <td>11</td>
+                    <td>12</td>
+                </tr>
+                <tr>
+                    <td>13</td>
+                    <td>14</td>
+                    <td>15</td>
+                    <td>16</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+<script>
+    // Fetch data from the API
+    fetch('http://111.229.165.11:5194/WeatherForecast/soilMoisture')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const tableBody = document.getElementById('soilMoistureTable').getElementsByTagName('tbody')[0];
+            data.forEach(item => {
+                const row = tableBody.insertRow();
+                const cellDeviceName = row.insertCell(0);
+                const cellRegisterName = row.insertCell(1);
+                const cellTem = row.insertCell(2);
+                const cellHum = row.insertCell(3);
+                cellDeviceName.textContent = item.deviceName; // Assuming the data has deviceName field
+                cellRegisterName.textContent = item.registerName; // Assuming the data has registerName field
+                cellTem.textContent = item.tem; // Assuming the data has tem field
+                cellHum.textContent = item.hum; // Assuming the data has hum field
+            });
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+</script>
+<script src="js/jquery/jQuery-2.2.0.min.js"></script>
+<script src="js/base.js"></script>
+<script src="js/table1.js"></script>
+<script src="js/ztree/jquery.ztree.all-3.5.js"></script>
+<script src="js/listTree.js"></script>
+<script src="js/bstable/js/bootstrap.min.js"></script>
+<script src="js/bstable/js/bootstrap-table.js"></script>
+<script src="js/bstable/js/bootstrap-table-zh-CN.min.js"></script>
+<script src="js/layer_v2.1/layer/layer.js"></script>
+</body>
+</html>

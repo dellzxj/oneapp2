@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>土壤湿度监测</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.js"></script>
+    <style>
+        /* 选项卡样式 */
+        .tabs {
+            display: flex; /* 使用弹性布局 */
+            cursor: pointer; /* 鼠标悬停时显示手型光标 */
+            margin-bottom: 10px; /* 下方间距 */
+        }
+        .tab {
+            padding: 10px; /* 内边距 */
+            border: 1px solid #ccc; /* 边框样式 */
+            margin-right: 5px; /* 右侧间距 */
+            background-color: #f1f1f1; /* 背景色 */
+        }
+        .tab.active {
+            background-color: #ccc; /* 激活选项卡的背景色 */
+        }
+        .canvas-container {
+            display: none; /* 默认隐藏画布容器 */
+        }
+        .canvas-container.active {
+            display: block; /* 激活时显示画布容器 */
+        }
+    </style>
+</head>
+<body>
+<div class="tabs">
+    <div class="tab active" data-index="0">1号杆湿度10厘米</div>
+    <div class="tab" data-index="1">1号杆湿度20厘米</div>
+    <div class="tab" data-index="2">1号杆湿度30厘米</div>
+    <div class="tab" data-index="3">2号杆湿度10厘米</div>
+    <div class="tab" data-index="4">2号杆湿度20厘米</div>
+    <div class="tab" data-index="5">2号杆湿度30厘米</div>
+</div>
+<!-- 每个画布容器 -->
+<div class="canvas-container active" id="canvas0">
+    <canvas id="chart1" width="400" height="200"></canvas>
+</div>
+<div class="canvas-container" id="canvas1">
+    <canvas id="chart2" width="400" height="200"></canvas>
+</div>
+<div class="canvas-container" id="canvas2">
+    <canvas id="chart3" width="400" height="200"></canvas>
+</div>
+<div class="canvas-container" id="canvas3">
+    <canvas id="chart4" width="400" height="200"></canvas>
+</div>
+<div class="canvas-container" id="canvas4">
+    <canvas id="chart5" width="400" height="200"></canvas>
+</div>
+<div class="canvas-container" id="canvas5">
+    <canvas id="chart6" width="400" height="200"></canvas>
+</div>
+<script>
+    // 日期设置
+    const startDate = '2025-03-06'; // 实时数据开始日期
+    const endDate = new Date().toISOString().split('T')[0]; // 实时数据结束日期
+    const historyStartDate = '2022-03-06'; // 历史数据开始日期
+    const historyEndDate = new Date(); // 历史数据结束日期
+    const historyEndFormatted = `2022-${(historyEndDate.getMonth() + 1).toString().padStart(2, '0')}-${historyEndDate.getDate().toString().padStart(2, '0')}`; // 格式化历史结束日期
+    const tabs = document.querySelectorAll('.tab'); // 获取所有选项卡
+    const canvasContainers = document.querySelectorAll('.canvas-container'); // 获取所有画布容器
+    // 为每个选项卡添加点击事件
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function () {
+            const index = this.getAttribute('data-index'); // 获取选项卡索引
+            tabs.forEach(t => t.classList.remove('active')); // 移除所有选项卡的激活状态
+            this.classList.add('active'); // 激活当前选项卡
+            canvasContainers.forEach(c => c.classList.remove('active')); // 移除所有画布容器的激活状态
+            document.getElementById(`canvas${index}`).classList.add('active'); // 激活对应的画布容器
+            fetchData(index); // 获取数据
+        });
+    });
+    // 获取数据的异步函数
+    async function fetchData(index) {
+        const registerName = ` ${index + 1}`; // 根据索引生成对应的registerName
+        const moistureUrl = `http://111.229.165.11:5194/weatherforecast/soilMoistureAverage?StartDate=${startDate}&EndDate=${endDate}`; // 实时数据API
+        const historyUrl = `http://111.229.165.11:5194/WeatherForecast/HisCRMTHDevices?StartDate=${historyStartDate}&EndDate=${historyEndFormatted}`; // 历史数据API
+
+        try {
+            // 获取实时数据
+            const moistureResponse = await fetch(moistureUrl);
+            const moistureData = await moistureResponse.json();
+
+
+            // 创建实时数据集
+            const moisturedatasets = moistureData.map(register => ({
+                name: register.registerNames, // 获取注册名称
+                dates: [], // 日期数组
+                averageHums: [] // 湿度数组
+            }));
+            // 填充实时数据集
+            moistureData.forEach(item => {
+                const index = moisturedatasets.findIndex(moisturedataset => moisturedataset.name === item.registerNames);
+                if (index !== -1) {
+                    moisturedatasets[index].dates.push(item.date); // 添加日期
+                    moisturedatasets[index].averageHums.push(item.averageHum); // 添加湿度
+                }
+            });
+            console.log(moisturedatasets);
+            // 获取历史数据
+            const historyResponse = await fetch(historyUrl);
+            const historyData = await historyResponse.json();
+
+
+            // 创建历史数据集
+            const historydatasets = historyData.map(register => ({
+                name: register.registerNames, // 获取注册名称
+                dates: [], // 日期数组
+                averageHums: [] // 湿度数组
+            }));
+            // 填充历史数据集
+            historyData.forEach(item => {
+                const index = historydatasets.findIndex(historydataset => historydataset.name === item.registerNames);
+                if (index !== -1) {
+                    historydatasets[index].dates.push(item.date); // 添加日期
+                    historydatasets[index].averageHums.push(item.averageHum); // 添加湿度
+                }
+            });
+            console.log(historydatasets);
+            // 绘制图表
+            const ctx = document.getElementById(`chart${index + 1}`).getContext('2d');
+            new Chart(ctx, {
+                type: 'line', // 图表类型
+                data: {
+                    labels: moisturedatasets[index].dates, // X轴标签为实时数据的日期
+                    datasets: [
+                        {
+                            label: `实时湿度 - ${registerName}`, // 实时湿度数据集
+                            data: moisturedatasets[index].averageHums, // Y轴数据为实时湿度
+                            borderColor: 'rgba(75, 192, 192, 1)', // 实时湿度边框颜色
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)', // 实时湿度背景颜色
+                            fill: true,
+                        },
+                        {
+                            label: `历史湿度 - ${registerName}`, // 历史湿度数据集
+                            data: historydatasets[index].averageHums, // Y轴数据为历史湿度
+                            borderColor: 'rgba(255, 99, 132, 1)', // 历史湿度边框颜色
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)', // 历史湿度背景颜色
+                            fill: true,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true, // 响应式图表
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: '日期' // X轴标题
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: '湿度' // Y轴标题
+                            }
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('获取数据时出错:', error); // 错误处理
+        }
+    }
+    // 初始化第一个选项卡的数据
+    // 初始化所有选项卡的数据
+    for (let i = 0; i < tabs.length; i++) {
+        fetchData(i);
+    }
+</script>
+</body>
+</html>

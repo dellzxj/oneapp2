@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>无人驾驶车辆监控</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link href="css/zTreeStyle/zTreeStyle.css" rel="stylesheet" type="text/css" />
+
+</head>
+<style>
+    .video-container {
+        display: flex; /* 使用 Flexbox 布局 */
+        flex-wrap: wrap; /* 允许换行 */
+        justify-content: center; /* 水平居中 */
+        margin-bottom: 20px; /* 每行之间的间距 */
+    }
+    .video-item {
+        margin: 10px; /* 每个视频项之间的间距 */
+        text-align: center; /* 文本居中 */
+    }
+    p {
+        font-size: 14px; /* 字体大小 */
+        color: #333; /* 字体颜色 */
+        margin-top: 5px; /* 上边距 */
+    }
+    p {
+        font-size: 14px; /* 字体大小 */
+        color: white; /* 将字体颜色设置为白色 */
+        margin-top: 5px; /* 上边距 */
+    }
+</style>
+<body>
+<!--顶部-->
+<header class="header left">
+    <div class="left nav">
+        <ul>
+            <li><i class="nav_1"></i><a href="index.html">作业信息系统 </a> </li>
+            <li><i class="nav_2"></i><a href="carContrl.html">作业监控系统</a> </li>
+
+
+        </ul>
+    </div>
+    <div class="header_center left">
+        <h2><strong>利民无人农场车辆视频监控</strong></h2>
+        <p class="color_font"><small>车载视频管理</small></p>
+    </div>
+    <div class="right nav text_right">
+        <ul> <li><i class="nav_7"></i><a href="environmental.html">环境监测系统</a> </li>
+            <li><i class="nav_8"></i><a href="irrigation.html">智慧灌溉系统</a> </li>
+        </ul>
+    </div>
+
+</header>
+
+<div class="con1 left" id="car_control">
+    <div class="left_table left bow_shadow">
+        <p>
+            <input type="text" placeholder="输入车牌号" class="carNo_input"><input type="button" class="find_but"/>
+        </p>
+
+        <p class="set_list"><i class="list_i"></i> 车辆列表：</p>
+        <ul id="treeDemo" class="ztree"></ul>
+    </div>
+
+
+    <div class="right right_table">
+        <div class="video-container">
+            <div class="video-item">
+                <iframe src="https://rinotrack.unistrong.com/video/player.html?serialnumber=15760006538&autoplay=1&muted=1" width="400" height="267" frameborder="0" allowfullscreen></iframe>
+                <p>1号无人驾驶拖拉机车头视频</p>
+            </div>
+
+            <div class="video-item">
+                <iframe src="https://rinotrack.unistrong.com/video/player.html?serialnumber=15760006540&autoplay=1&muted=1" width="400" height="267" frameborder="0" allowfullscreen></iframe>
+                <p>1号无人驾驶拖拉机车尾视频</p>
+            </div>
+
+            <div class="video-item">
+                <iframe src="https://rinotrack.unistrong.com/video/player.html?serialnumber=15760006541&autoplay=1&muted=1" width="400" height="267" frameborder="0" allowfullscreen></iframe>
+                <p>2号无人驾驶拖拉机车头视频</p>
+            </div>
+            <div class="video-item">
+                <iframe src="https://rinotrack.unistrong.com/video/player.html?serialnumber=15760005912&autoplay=1&muted=1" width="400" height="267" frameborder="0" allowfullscreen></iframe>
+                <p>2号无人驾驶拖拉机车尾视频</p>
+            </div>
+            <div class="video-item">
+                <iframe src="https://rinotrack.unistrong.com/video/player.html?serialnumber=15760006539&autoplay=1&muted=1" width="400" height="267" frameborder="0" allowfullscreen></iframe>
+                <p>无人驾驶打药车头视频</p>
+            </div>
+            <div class="video-item">
+                <iframe src="https://rinotrack.unistrong.com/video/player.html?serialnumber=15760006537&autoplay=1&muted=1" width="400" height="267" frameborder="0" allowfullscreen></iframe>
+                <p>无人驾驶打药车尾视频</p>
+            </div>
+</div>
+
+<script src="js/jquery/jQuery-2.2.0.min.js"></script>
+<script src="js/echarts-all.js"></script>
+<script src="js/base.js"></script>
+    <script src="js/listTree1.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=5ieMMexWmzB9jivTq6oCRX9j&callback"></script>
+<script src="js/car_control.js"></script>
+<script src="js/ztree/jquery.ztree.all-3.5.js"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,460 @@
+<!doctype html>
+<html>
+<head>
+    <title>利民无人农场大数据展示平台</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+    <meta http-equiv="Expires" content="0" />
+    <link rel="stylesheet" href="css/base.css">
+    <script>
+        document.write("<link type='text/css' href='css/video.css?version=" + new Date().getTime() + "' rel='stylesheet' />");
+    </script>
+    <style>
+        #soilMoistureTable {
+            margin-left: 15px;
+            margin-top: 25px;
+            font-size: 12.5px;
+            color: yellow;
+
+            border: 1px solid white; /* 设置表格的边框颜色为白色，粗细为1px */
+            border-collapse: collapse;
+        }
+        #soilMoistureTable th {
+            color: white;
+            font-size: 16px;
+            width: 20%;
+        }
+        #soilMoistureTable td {
+            border: 1px solid white; /* 设置单元格的边框颜色为白色，粗细为1px */
+            height: 40px;
+            text-align: center;
+        }
+
+    </style>
+
+    <script>
+        // Fetch data from the API
+        fetch('http://111.229.165.11:5194/WeatherForecast/soilMoisture')
+            .then(response => {
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+
+            .then(data => {
+
+                const tableBody = document.getElementById('soilMoistureTable').getElementsByTagName('tbody')[0];
+                data.forEach(item => {
+
+                    const row = tableBody.insertRow();
+                    const cellDeviceName = row.insertCell(0);
+                    const cellRegisterName = row.insertCell(1);
+                    const cellTem = row.insertCell(2);
+                    const cellHum = row.insertCell(3);
+
+                    cellDeviceName.textContent = item.deviceName; // Assuming the data has deviceName field
+                    cellRegisterName.textContent = item.registerName; // Assuming the data has registerName field
+                    cellTem.textContent = item.tem; // Assuming the data has tem field
+                    cellHum.textContent = item.hum; // Assuming the data has hum field
+                });
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    </script>
+    <style>
+        legend {
+            color: white;
+            font-size: 20px;
+        }
+    </style>
+    <style>
+        #soilMoistureTable {
+            margin-left: 15px;
+            margin-top: 25px;
+        }
+        #soilMoistureTable th {
+            color: white;
+            font-size: 16px;
+            width: 20%;
+        }
+    </style>
+</head>
+
+<body>
+<header class="header left">
+    <div class="left nav">
+        <ul>
+            <li class="nav_active"><i class="nav_1"></i><a href="index.html">作业信息系统</a> </li>
+            <li><i class="nav_2"></i><a href="https://ifarm.lovol.com/#/loading?url=unmannedFarm&username=baojilimin&password=WHj@041814">作业监控系统</a> </li>
+        </ul>
+    </div>
+    <div class="header_center left">
+        <h2><strong>利民无人农场大数据展示平台</strong></h2>
+    </div>
+    <div class="right nav text_right">
+        <ul>
+            <li><i class="nav_7"></i><a href="environmental.html">环境监测系统</a> </li>
+            <li><i class="nav_8"></i><a href="irrigation.html">智慧灌溉系统</a> </li>
+        </ul>
+    </div>
+</header>
+<div >
+    <img src="img/bj.gif" style="width: 100%; max-height: 100px;  alt="实时天气预报">
+
+
+
+
+        </div>
+    <div class="con left">
+        <!-- 选择时间 -->
+        <!-- 数据统计分析图 -->
+        <div class="div_any">
+            <div class="left div_any01">
+                <div class="div_any_child">
+                    <div class="div_any_title"><img src="img/title_1.png">当前作业概述 </div>
+                    <p id="char1" class="p_chart"></p>
+                </div>
+                <div class="div_any_child">
+                    <div class="div_any_title"><img src="img/title_2.png">作业实时监控 </div>
+                    <p id="char2" class="p_chart"></p>
+                </div>
+            </div>
+            <div class="div_any02 left ">
+                <div class="div_any_child div_height">
+                    <div class="div_any_title any_title_width"><img src="img/title_3.png">农场实况 </div>
+                    <div id="divPlugin" class="plugin" style="margin-left: 15px; margin-top: 25px;"></div>
+                    <fieldset class="ptz">
+                        <legend>农场实况控制</legend>
+                        <table cellpadding="0" cellspacing="3" border="0" class="left">
+                            <tr>
+                                <td class="tt device-label">设备端口</td>
+                                <td colspan="2"><input id="deviceport" type="text" class="txt " />（可选参数）</td>
+                                <td>
+                                    <span class="split-label">窗口分割数</span>&nbsp;
+                                    <select class="sel2" onchange="changeWndNum(this.value);">
+                                        <option value="1" selected>1x1</option>
+                                        <option value="2">2x2</option>
+                                        <option value="3">3x3</option>
+                                        <option value="4">4x4</option>
+                                        <option value="1*2">1x2</option>
+                                        <option value="2*1">2x1</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tt device-label">RTSP端口</td>
+                                <td colspan="3"><input id="rtspport" type="text" class="txt" />（可选参数）</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <input type="button" class="btn" value="登录" onclick="clickLogin();" />
+                                    <input type="button" class="btn2" value="开始预览" onclick="clickStartRealPlay();" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tt device-label">已登录设备</td>
+                                <td>
+                                    <select id="ip" class="sel" onchange="getChannelInfo();getDevicePort();"></select>
+                                </td>
+                                <td class="tt device-label">通道列表</td>
+                                <td>
+                                    <select id="channels" class="sel"></select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tt device-label">码流类型</td>
+                                <td>
+                                    <select id="streamtype" class="sel">
+                                        <option value="1">主码流</option>
+                                        <option value="2">子码流</option>
+                                        <option value="3">第三码流</option>
+                                        <option value="4">转码码流</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                        <table cellpadding="0" cellspacing="3" border="0" class="left">
+                            <tr>
+                                <td>
+                                    <input type="button" class="btn" value="左上" onmousedown="mouseDownPTZControl(5);" onmouseup="mouseUpPTZControl();" />
+                                    <input type="button" class="btn" value="上" onmousedown="mouseDownPTZControl(1);" onmouseup="mouseUpPTZControl();" />
+                                    <input type="button" class="btn" value="右上" onmousedown="mouseDownPTZControl(7);" onmouseup="mouseUpPTZControl();" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="button" class="btn" value="左" onmousedown="mouseDownPTZControl(3);" onmouseup="mouseUpPTZControl();" />
+                                    <input type="button" class="btn" value="自动" onclick="mouseDownPTZControl(9);" />
+                                    <input type="button" class="btn" value="右" onmousedown="mouseDownPTZControl(4);" onmouseup="mouseUpPTZControl();" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="button" class="btn" value="左下" onmousedown="mouseDownPTZControl(6);" onmouseup="mouseUpPTZControl();" />
+                                    <input type="button" class="btn" value="下" onmousedown="mouseDownPTZControl(2);" onmouseup="mouseUpPTZControl();" />
+                                    <input type="button" class="btn" value="右下" onmousedown="mouseDownPTZControl(8);" onmouseup="mouseUpPTZControl();" />
+                                </td>
+                            </tr>
+                        </table>
+                        <table cellpadding="0" cellspacing="3" border="0" class="left">
+                            <tr>
+                                <td class="tt device-label">云台速度</td>
+                                <td>
+                                    <select id="ptzspeed" class="sel">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4" selected>4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="tt device-label">预置点号</td>
+                                <td><input id="preset" type="text" class="txt" value="1" /></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <input type="button" class="btn" value="设置" onclick="clickSetPreset();" />
+                                    <input type="button" class="btn" value="调用" onclick="clickGoPreset();" />
+                                </td>
+                            </tr>
+                        </table>
+                        <table cellpadding="0" cellspacing="3" border="0" class="left">
+                            <tr>
+                                <td class="tt"><input type="button" class="btn2" value="变倍+" onmousedown="PTZZoomIn()" onmouseup="PTZZoomStop()"></td>
+                                <td><input type="button" class="btn2" value="变倍-" onmousedown="PTZZoomout()" onmouseup="PTZZoomStop()"></td>
+                            </tr>
+                            <tr>
+                                <td class="tt"><input type="button" class="btn2" value="变焦+" onmousedown="PTZFocusIn()" onmouseup="PTZFoucusStop()"></td>
+                                <td><input type="button" class="btn2" value="变焦-" onmousedown="PTZFoucusOut()" onmouseup="PTZFoucusStop()"></td>
+                            </tr>
+                            <tr>
+                                <td class="tt"><input type="button" class="btn2" value="光圈+" onmousedown="PTZIrisIn()" onmouseup="PTZIrisStop()"></td>
+                                <td><input type="button" class="btn2" value="光圈-" onmousedown="PTZIrisOut()" onmouseup="PTZIrisStop()"></td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="right div_any01">
+                <div class="div_any_child">
+                    <div class="div_any_title"><img src="img/title_4.png">土壤实时墒情 </div>
+                    <table id="soilMoistureTable">
+                        <thead>
+                        <tr>
+                            <th>设备名称</th>
+                            <th>测试点</th>
+                            <th>温度</th>
+                            <th>湿度</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                   
+                    
+                </div>
+                <div class="div_any_child">
+                    <div class="div_any_title"><img src="img/title_5.png">智能灌溉状态 </div>
+                    
+                    <div class="switch-container" style="margin-top: 25px; margin-left: 25px;"></div>
+                        <div class="switch" style="margin-top: 20px; margin-left: 25px;">
+                            <label>
+                                <span style="font-size: 18px; color: white;">阀门 1</span>
+                                <input type="checkbox" id="switch1" onchange="toggleValve(this)">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="switch">
+                            <label>
+                                <span style="font-size: 18px; color: white;">阀门 2</span>
+                                <input type="checkbox" id="switch2">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="switch">
+                            <label>
+                                <span style="font-size: 18px; color: white;">阀门 3</span>
+                                <input type="checkbox" id="switch3">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="switch" style="margin-top: 20px; margin-left: 25px;">
+                            <label>
+                                <span style="font-size: 18px; color: white;">阀门 4</span>
+                                <input type="checkbox" id="switch4">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="switch">
+                            <label>
+                                <span style="font-size: 18px; color: white;">阀门 5</span>
+                                <input type="checkbox" id="switch5">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="switch">
+                            <label>
+                                <span style="font-size: 18px; color: white;">阀门 6</span>
+                                <input type="checkbox" id="switch6">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="switch" style="margin-top: 20px; margin-left: 25px;">
+                            <label>
+                                <span style="font-size: 18px; color: white;">阀门 7</span>
+                                <input type="checkbox" id="switch7">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="switch">
+                            <label>
+                                <span style="font-size: 18px; color: white;">阀门 8</span>
+                                <input type="checkbox" id="switch8">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="switch">
+                            <label>
+                                <span style="font-size: 18px; color: white;">阀门 9</span>
+                                <input type="checkbox" id="switch9">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="switch" style="margin-top: 20px; margin-left: 25px;">
+                            <label>
+                                <span style="font-size: 18px; color: white;">阀门10</span>
+                                <input type="checkbox" id="switch10">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="switch">
+                            <label>
+                                <span style="font-size: 18px; color: white;">阀门11</span>
+                                <input type="checkbox" id="switch11">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div style="margin-top: 20px; margin-left: 25px;">
+                            <button onclick="toggleAllSwitches(true)" style="padding: 10px 20px; font-size: 16px;">全部打开</button>
+                            <button onclick="toggleAllSwitches(false)" style="padding: 10px 20px; font-size: 16px; margin-left: 10px;">全部关闭</button>
+                        </div>
+    
+                        <script>
+                            function toggleAllSwitches(state) {
+                                for (let i = 1; i <= 11; i++) {
+                                    document.getElementById(`switch${i}`).checked = state;
+                                }
+                            }
+                        </script>
+                    </div>
+                <script>
+                    async function toggleValve(checkbox) {
+                        const loginUrl = "http://api.farm.0531yun.cn/api/v2.0/entrance/user/userLogin";
+                        const controlUrl = "http://api.farm.0531yun.cn/api/v2.0/irrigation/valveOperatingMode/manualControlValve";
+                        // 获取token
+                        const loginHeaders = {
+                            'Content-Type': 'application/json',
+                            'loginName': 'cq240319hex',
+                            'loginPwd': 'cq240319hex'
+                        };
+                        try {
+                            // 获取token
+                            const loginResponse = await fetch(loginUrl, {
+                                method: 'POST',
+                                headers: loginHeaders
+                            });
+                            if (!loginResponse.ok) {
+                                throw new Error('登录失败');
+                            }
+                            const loginResult = await loginResponse.json();
+                            const token = loginResult.token; // 假设返回的JSON中有token字段
+                            // 控制阀门
+                            const mode = checkbox.checked ? 1 : 0; // 根据checkbox状态设置mode
+                            const controlParams = new URLSearchParams({
+                                deviceAddr: '40260558',
+                                factorId: '40260558_65',
+                                mode: mode
+                            });
+                            const controlResponse = await fetch(`${controlUrl}?${controlParams}`, {
+                                method: 'GET',
+                                headers: {
+                                    'Authorization': `Bearer ${token}`
+                                }
+                            });
+                            if (!controlResponse.ok) {
+                                throw new Error('控制阀门失败');
+                            }
+                            const controlResult = await controlResponse.json();
+                            console.log(controlResult); // 打印控制结果
+                        } catch (error) {
+                            console.error(error);
+                            alert('操作失败: ' + error.message);
+                        }
+                    }
+                </script>
+
+                    <style>
+                        .switch-container {
+                            display: flex;
+                            flex-wrap: wrap;
+                            gap: 10px;
+                        }
+                        .switch {
+                            display: inline-block;
+                            margin: 5px;
+                        }
+                        .switch label {
+                            display: flex;
+                            align-items: center;
+                            gap: 5px;
+                        }
+                        .slider {
+                            width: 40px;
+                            height: 20px;
+                            background-color: #ccc;
+                            border-radius: 10px;
+                            position: relative;
+                            cursor: pointer;
+                        }
+                        .slider::before {
+                            content: '';
+                            position: absolute;
+                            width: 18px;
+                            height: 18px;
+                            background-color: white;
+                            border-radius: 50%;
+                            top: 1px;
+                            left: 1px;
+                            transition: 0.3s;
+                        }
+                        input[type="checkbox"]:checked + .slider::before {
+                            transform: translateX(20px);
+                        }
+                        input[type="checkbox"]:checked + .slider {
+                            background-color: #09c532;
+                        }
+                    </style>
+                </div>
+            </div>
+        </div>
+        <!-- 分析表格 -->
+    </div>
+</body>
+<script src="jquery-1.7.1.min.js"></script>
+<script id="videonode" src="codebase/webVideoCtrl.js"></script>
+<script src="video.js"></script>
+<script src="js/jquery/jQuery-2.2.0.min.js"></script>
+<script src="js/echarts-all.js"></script>
+<script src="js/base.js"></script>
+<script src="js/index.js"></script>
+<script src="js/map.js"></script>
+</html>

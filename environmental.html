@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>环境监测系统</title>
+    <link rel="stylesheet" href="js/bstable/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="js/bstable/css/bootstrap-table(1).css"/>
+    <link rel="stylesheet" href="css/base.css">
+    <link href="css/zTreeStyle/zTreeStyle.css" rel="stylesheet" type="text/css"/>
+    <style>
+        #soilMoistureTable {
+            margin-left: 15px;
+            margin-top: 25px;
+            font-size: 15px;
+            color: yellow;
+            border: 1px solid white; /* 设置表格的边框颜色为白色，粗细为1px */
+            border-collapse: collapse;
+        }
+
+        #soilMoistureTable th {
+            color: white;
+            font-size: 16px;
+            width: 20%;
+        }
+
+        #soilMoistureTable td {
+            border: 1px solid white; /* 设置单元格的边框颜色为白色，粗细为1px */
+            height: 30px;
+            text-align: center;
+        }
+
+        .centered-text {
+            font-size: 28px; /* 字体大小 */
+            color: yellow; /* 字体颜色 */
+            text-align: center; /* 居中对齐 */
+            margin-top: 10px; /* 上边距 */
+            margin-right: 80px;
+        }
+
+        input {
+            color: white; /* 字体颜色 */
+            background-color: black; /* 背景颜色（可选） */
+            border: 1px solid gray; /* 边框颜色（可选） */
+            padding: 10px; /* 内边距（可选） */
+            border-radius: 5px;
+        }
+        /* 边框圆角（可选） */
+        .button-container {
+            text-align: center; /* 按钮容器文本居中 */
+        }
+        button {
+            padding: 10px 20px; /* 内边距 */
+            font-size: 16px; /* 字体大小 */
+            color: white; /* 字体颜色 */
+            background-color: #007bff; /* 按钮背景颜色 */
+            border: none; /* 去掉边框 */
+            border-radius: 5px; /* 圆角 */
+            cursor: pointer; /* 鼠标指针变为手形 */
+            transition: background-color 0.3s; /* 背景颜色变化的过渡效果 */
+            margin: 10px 0;
+        }
+        button:hover {
+            background-color: #0056b3; /* 悬停时的背景颜色 */
+        }
+    </style>
+</head>
+<body>
+<!--顶部-->
+<header class="header left">
+    <div class="left nav">
+        <ul>
+            <li><i class="nav_1"></i><a href="index.html">作业信息系统 </a></li>
+            <li><i class="nav_2"></i><a href="carContrl.html">作业监控系统</a></li>
+        </ul>
+    </div>
+    <div class="header_center left">
+        <h2><strong>环境监测系统</strong></h2>
+        <p class="color_font"><small>环境监测系统</small></p>
+    </div>
+    <div class="right nav text_right">
+        <ul>
+            <li><i class="nav_7"></i><a href="environmental.html">环境监测系统</a></li>
+            <li><i class="nav_8"></i><a href="irrigation.html">智慧灌溉系统</a></li>
+        </ul>
+    </div>
+</header>
+<div class="clear"></div>
+<!--内容部分-->
+<div class="con1 left" id="car_control">
+    <div class="left_table left bow_shadow">
+
+        <p class="set_list"><i class="list_i"></i> 设备列表：</p>
+        <ul id="treeDemo" class="ztree"></ul>
+    </div>
+    <div class="right right_table">
+
+        <div class="table_find">
+            <p class="centered-text">气象站实时数据</p>
+            <p>
+                <label>名称：</label><input type="text" id="stationName" value="利民无人农场气象站">
+                <label>风力：</label><input type="text" id="windPower">
+                <label>风速：</label><input type="text" id="windSpeed">
+                <label>风向：</label><input type="text" id="windDirection">
+            </p>
+            <p>
+                <label>温度：</label><input type="text" id="temperature" value="">
+                <label>湿度：</label><input type="text" id="humidity">
+                <label>土壤导电性：</label><input type="text" id="soilConductivity">
+                <label>土壤温度：</label><input type="text" id="soilTemperature">
+            </p>
+            <p>
+                <label>土壤湿度：</label><input type="text" id="soilMoisture" value="">
+                <label>磷：</label><input type="text" id="phosphorus">
+                <label>氮：</label><input type="text" id="nitrogen">
+                <label>钾：</label><input type="text" id="potassium">
+            </p>
+            <p>
+                <label>当前降雨量：</label><input type="text" id="currentRainfall" value="">
+                <label>昨天降雨量：</label><input type="text" id="yesterdayRainfall">
+                <label>即时降雨量：</label><input type="text" id="instantRainfall">
+                <label>累计降雨量：</label><input type="text" id="totalRainfall">
+            </p>
+            <div class="button-container">
+                <button onclick="fetchWeatherData()">获取气象站实时数据</button>
+            </div>
+
+
+        </div>
+        <div class="table_p table_p01">
+            <p class="centered-text">土壤墒情实时数据</p>
+            <table id="soilMoistureTable">
+                <thead>
+                <tr>
+                    <th>设备名称</th>
+                    <th>测试点</th>
+                    <th>温度</th>
+                    <th>湿度</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Data will be inserted here -->
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>
+<script>
+    // Fetch data from the API
+    fetch('http://111.229.165.11:5194/WeatherForecast/soilMoisture')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const tableBody = document.getElementById('soilMoistureTable').getElementsByTagName('tbody')[0];
+            data.forEach(item => {
+                const row = tableBody.insertRow();
+                const cellDeviceName = row.insertCell(0);
+                const cellRegisterName = row.insertCell(1);
+                const cellTem = row.insertCell(2);
+                const cellHum = row.insertCell(3);
+                cellDeviceName.textContent = item.deviceName; // Assuming the data has deviceName field
+                cellRegisterName.textContent = item.registerName; // Assuming the data has registerName field
+                cellTem.textContent = item.tem; // Assuming the data has tem field
+                cellHum.textContent = item.hum; // Assuming the data has hum field
+            });
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+</script>
+<script>
+    async function fetchWeatherData() {
+        try {
+            const response = await fetch('http://111.229.165.11:5194/weatherforecast/weatherStation');
+            if (!response.ok) {
+                throw new Error('网络响应不是一个有效的状态');
+            }
+            const data = await response.json();
+
+
+            console.log(data);
+
+
+            document.getElementById('windPower').value = data[0].windPower; // windPower
+            document.getElementById('windSpeed').value = data[0].windspeed; // windspped
+            document.getElementById('windDirection').value = data[0].windDirection; // windDirection
+            document.getElementById('temperature').value = data[0].tem; // temperature
+            document.getElementById('humidity').value = data[0].hum; // hum
+            document.getElementById('soilConductivity').value = data[0].soilConductivity; // soilConductivity
+            document.getElementById('soilTemperature').value = data[0].temperature; // tem
+            document.getElementById('soilMoisture').value = data[0].hemperature; // 如果有这个字段则添加
+            document.getElementById('phosphorus').value = data[0].phosphorus; // phosphorus
+            document.getElementById('nitrogen').value = data[0].nitrogen; // nitrogen
+            document.getElementById('potassium').value = data[0].potassium; // potassium
+            document.getElementById('currentRainfall').value = data[0].currentRainfall; // currentRainfall
+            document.getElementById('yesterdayRainfall').value = data[0].yesterdayRainfal; // yesterdayRainfal
+            document.getElementById('instantRainfall').value = data[0].instantaneousRainfal; // instantaneousRainfal
+            document.getElementById('totalRainfall').value = data[0].accumulatedRainfall;
+        } catch (error) {
+            console.error('获取数据时出错:', error);
+        }
+    }
+</script>
+<script src="js/jquery/jQuery-2.2.0.min.js"></script>
+<script src="js/base.js"></script>
+<script src="js/table1.js"></script>
+<script src="js/ztree/jquery.ztree.all-3.5.js"></script>
+<script src="js/listTree.js"></script>
+<script src="js/bstable/js/bootstrap.min.js"></script>
+<script src="js/bstable/js/bootstrap-table.js"></script>
+<script src="js/bstable/js/bootstrap-table-zh-CN.min.js"></script>
+<script src="js/layer_v2.1/layer/layer.js"></script>
+</body>
+</html>

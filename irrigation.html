@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>智慧灌溉系统</title>
+    <link rel="stylesheet" href="css/base.css">
+    <style>
+        #sliders {
+            display: flex;
+            flex-wrap: wrap; /* 允许换行 */
+            width: 390px; /* 根据需要调整容器宽度 */
+
+        }
+        .slider-container {
+            display: flex; /* 使用 flexbox 布局 */
+            align-items: center; /* 垂直居中对齐 */
+            margin: 25px 0 25px 15px;
+            font-size: 16px;
+            color: #f5f5f5;
+        }
+        .slider {
+            width: 40px;
+            height: 20px;
+            background-color: #b0b3ba;
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+            margin-left: 10px; /* 滑块与标签之间的间距 */
+        }
+        .slider::before {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            top: 0;
+            left: 0;
+            transition: left 0.2s;
+        }
+        .slider.active {
+            background-color: #4caf50;
+        }
+        .slider.active::before {
+            left: 20px;
+        }
+        .content {
+            display: flex; /* 内容区域使用 Flexbox */
+            flex: 1; /* 占用剩余空间 */
+        }
+        #buttons {
+            flex: 1; /* 右侧按钮区域占用1份 */
+            padding: 20px;
+
+            display: flex;
+            flex-direction: column; /* 按钮纵向排列 */
+            justify-content: center; /* 垂直居中 */
+        }
+        .button {
+            margin: 16px 0; /* 按钮之间的间距 */
+            padding: 10px;
+            background-color: #10c192;
+            color: #f8f5f5; /* 按钮文字颜色 */
+            width: 240px;
+            border: none; /* 去掉边框 */
+            border-radius: 5px; /* 按钮圆角 */
+            cursor: pointer; /* 鼠标悬停时显示为手形 */
+        }
+        #future {
+            margin-left: 15px;
+            margin-top: 25px;
+            font-size: 18px;
+            color: yellow;
+
+            border: 1px solid white; /* 设置表格的边框颜色为白色，粗细为1px */
+            border-collapse: collapse;
+        }
+        #future th {
+            color: white;
+            font-size: 16px;
+            width: 12%;
+        }
+        #future td {
+            border: 1px solid white; /* 设置单元格的边框颜色为白色，粗细为1px */
+            height: 30px;
+            text-align: center;
+            font-size: 18px;
+            color: yellow;
+        }
+        .time-container {
+            display: flex; /* 使用flexbox布局 */
+            align-items: center; /* 垂直居中对齐 */
+            margin-left: 25px; /* 左边距25px */
+            margin-top: 25px; /* 上边距25px */
+        }
+        label {
+            display: block; /* 使标签独占一行 */
+            margin-top: 25px; /* 上边距25px */
+            margin-left: 25px; /* 左边距25px */
+            font-size: 16px; /* 字体大小16px */
+            font-family: "宋体", SimSun, sans-serif; /* 字体为宋体 */
+            color: white; /* 标签字体颜色为白色 */
+        }
+        input {
+            margin-left: 25px; /* 输入框左边距25px */
+            margin-top: 5px; /* 输入框上边距5px */
+            height: 30px;
+            width: 150px;
+            font-size: 16px; /* 输入框字体大小16px */
+            font-family: "宋体", SimSun, sans-serif;
+        }
+        .tabs {
+            display: flex; /* 使用弹性布局 */
+            cursor: pointer; /* 鼠标悬停时显示手型光标 */
+            margin-bottom: 10px; /* 下方间距 */
+        }
+        .tab {
+            padding: 10px; /* 内边距 */
+            border: 1px solid #ccc; /* 边框样式 */
+            margin-right: 5px; /* 右侧间距 */
+            background-color: #f1f1f1; /* 背景色 */
+        }
+        .tabs {
+            margin-top: 40px;  /* 上边距 20px */
+            margin-left: 80px; /* 左边距 40px */
+        }
+        .tab.active {
+            background-color: #ccc; /* 激活选项卡的背景色 */
+        }
+        .canvas-container {
+            display: none; /* 默认隐藏画布容器 */
+        }
+        .canvas-container.active {
+            display: block; /* 激活时显示画布容器 */
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.js"></script>
+</head>
+<body>
+<!--顶部-->
+<header class="header left">
+    <div class="left nav">
+        <ul>
+            <li ><i class="nav_1"></i><a href="index.html">作业信息系统</a> </li>
+            <li><i class="nav_2"></i><a href="carContrl.html">作业监控系统</a> </li>
+        </ul>
+    </div>
+    <div class="header_center left">
+        <h2><strong>利民无人农场智慧灌溉系统</strong></h2>
+        <p class="color_font"><small>智慧灌溉</small></p>
+    </div>
+    <div class="right nav text_right">
+        <ul> <li><i class="nav_7"></i><a href="environmental.html">环境监测系统</a> </li>
+            <li><i class="nav_8"></i><a href="irrigation.html">智慧灌溉系统</a> </li>
+        </ul>
+    </div>
+</header>
+<!--内容部分-->
+<div class="con left">
+
+    <div class="div_any">
+        <div class="left div_any03">
+            <div class="div_any_child01 left">
+                <div class="div_any_title"><img src="img/title_1.png">灌溉控制 </div>
+                <div class="content">
+                <div id="sliders"></div>
+                    <div id="buttons">
+                        <button class="button" id="openAllValves">阀门全打开</button>
+                        <button class="button">阀门全关闭</button>
+                        <button class="button">打开水泵</button>
+                        <button class="button">关闭水泵</button>
+                    </div>
+                </div>
+                <script>
+                    let token = '';
+                    // 创建滑动开关
+                    const slidersContainer = document.getElementById('sliders');
+                    for (let i = 65; i <= 75; i++) {
+                        const sliderContainer = document.createElement('div');
+                        sliderContainer.classList.add('slider-container');
+                        const label = document.createElement('span');
+                        label.innerText = `阀门${i - 64}`;  // 显示阀门编号 1 到 11
+                        sliderContainer.appendChild(label);
+                        const slider = document.createElement('div');
+                        slider.classList.add('slider');
+                        slider.setAttribute('data-id', i);
+                        slider.onclick = () => toggleValve(i, slider);
+                        sliderContainer.appendChild(slider);
+                        slidersContainer.appendChild(sliderContainer);
+                    }
+                    // 获取 token 的函数
+                    async function getToken() {
+                        const requestBody = {
+                            loginName: "cq240319hex", // 替换为你的用户名
+                            loginPwd: "cq240319hex"    // 替换为你的密码
+                        };
+                        const response = await fetch('http://localhost:3000/api/login', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(requestBody)
+                        });
+                        if (response.ok) {
+                            const data = await response.json();
+                            token = data.data.token; // 假设返回的结构中 token 在 data 字段下
+                            //document.getElementById('tokenDisplay').innerText = `Token: ${token}`;
+                        } else {
+                            //document.getElementById('tokenDisplay').innerText = '获取 Token 失败';
+                        }
+                    }
+                    // 控制阀门的函数
+                    async function controlValve(switchId, mode) {
+                        const deviceAddr = '40260558';
+                        const factorId = `40260558_${switchId}`;
+                        const response = await fetch(`http://localhost:3000/api/control-valve?token=${token}&deviceAddr=${deviceAddr}&factorId=${factorId}&mode=${mode}`);
+                        const data = await response.json();
+                        console.log(data); // 打印控制结果
+                    }
+                    // 切换阀门状态的函数
+                    async function toggleValve(switchId, slider) {
+                        if (!token) {
+                            await getToken(); // 获取 token
+                        }
+                        const mode = slider.classList.toggle('active') ? 1 : 0; // 切换状态
+                        await controlValve(switchId, mode); // 控制阀门
+                    }
+                    // 打开所有阀门的函数
+
+                    // 为“阀门全打开”按钮添加点击事件
+                    document.getElementById('openAllValves').onclick = openAllValves;
+
+                    // 页面加载时获取 token
+                    window.onload = getToken;
+                </script>
+
+            </div>
+            <div class="div_any_child01 left">
+                <div class="div_any_title"><img src="img/title_5.png">未来五天天气预报 </div>
+
+                <div class="char_table"><div class="table_p table_p01">
+                    <table id="future" style="width: calc(100% - 30px); height: calc(100% - 50px);">
+                        <thead><tr>
+                            <th>日期</th>
+                            <th>最低温/最高高温</th>
+                            <th>天气情况</th>
+                            <th>风向</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div></div>
+                <script>
+                    // Fetch data from the API
+                    fetch('http://111.229.165.11:5194/WeatherForecast/future')
+                        .then(response => {
+                            // console.log('res', response.json())
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            data.sort((a, b) => new Date(a.date) - new Date(b.date));
+                            const tableBody = document.getElementById('future').getElementsByTagName('tbody')[0];
+                            data.forEach(item => {
+
+                                const row = tableBody.insertRow();
+                                const cellDate = row.insertCell(0);
+                                const cellTemperatures = row.insertCell(1);
+                                const cellWeathers = row.insertCell(2);
+                                const cellDirects = row.insertCell(3);
+                                const formattedDate = new Date(item.date).toLocaleDateString('zh-CN', {
+                                    year: 'numeric',
+                                    month: '2-digit',
+                                    day: '2-digit'
+                                }).replace(/\//g, '-'); // 将斜杠
+                                cellDate.textContent = formattedDate; // Assuming the data has deviceName field
+                                cellTemperatures.textContent = item.temperatures; // Assuming the data has registerName field
+                                cellWeathers.textContent = item.weathers; // Assuming the data has tem field
+                                cellDirects.textContent = item.directs; // Assuming the data has hum field
+                            });
+                        })
+                        .catch(error => {
+                            console.error('There was a problem with the fetch operation:', error);
+                        });
+                </script>
+            </div>
+        </div>
+
+
+
+
+        <div class="right div_any03">
+
+            <div class="div_any_child01 left div_any_child01_wh">
+                <div class="div_any_title"><img src="img/title_5.png">土壤墒情湿度曲线图 </div>
+                <div class="tabs">
+                    <div class="tab active" data-index="0">1号杆湿度10厘米</div>
+                    <div class="tab" data-index="1">1号杆湿度20厘米</div>
+                    <div class="tab" data-index="2">1号杆湿度30厘米</div>
+                    <div class="tab" data-index="3">2号杆湿度10厘米</div>
+                    <div class="tab" data-index="4">2号杆湿度20厘米</div>
+                    <div class="tab" data-index="5">2号杆湿度30厘米</div>
+                </div>
+                <!-- 每个画布容器 -->
+                <div class="canvas-container active" id="canvas0">
+                    <canvas id="chart1" width="400" height="200"></canvas>
+                </div>
+                <div class="canvas-container" id="canvas1">
+                    <canvas id="chart2" width="400" height="200"></canvas>
+                </div>
+                <div class="canvas-container" id="canvas2">
+                    <canvas id="chart3" width="400" height="200"></canvas>
+                </div>
+                <div class="canvas-container" id="canvas3">
+                    <canvas id="chart4" width="400" height="200"></canvas>
+                </div>
+                <div class="canvas-container" id="canvas4">
+                    <canvas id="chart5" width="400" height="200"></canvas>
+                </div>
+                <div class="canvas-container" id="canvas5">
+                    <canvas id="chart6" width="400" height="200"></canvas>
+                </div>
+                <script>
+                    // 日期设置
+                    const startDate = '2025-03-06'; // 实时数据开始日期
+                    const endDate = new Date().toISOString().split('T')[0]; // 实时数据结束日期
+                    const historyStartDate = '2022-03-06'; // 历史数据开始日期
+                    const historyEndDate = new Date(); // 历史数据结束日期
+                    const historyEndFormatted = `2022-${(historyEndDate.getMonth() + 1).toString().padStart(2, '0')}-${historyEndDate.getDate().toString().padStart(2, '0')}`; // 格式化历史结束日期
+                    const tabs = document.querySelectorAll('.tab'); // 获取所有选项卡
+                    const canvasContainers = document.querySelectorAll('.canvas-container'); // 获取所有画布容器
+                    // 为每个选项卡添加点击事件
+                    tabs.forEach(tab => {
+                        tab.addEventListener('click', function () {
+                            const index = this.getAttribute('data-index'); // 获取选项卡索引
+                            tabs.forEach(t => t.classList.remove('active')); // 移除所有选项卡的激活状态
+                            this.classList.add('active'); // 激活当前选项卡
+                            canvasContainers.forEach(c => c.classList.remove('active')); // 移除所有画布容器的激活状态
+                            document.getElementById(`canvas${index}`).classList.add('active'); // 激活对应的画布容器
+                            fetchData(index); // 获取数据
+                        });
+                    });
+                    // 获取数据的异步函数
+                    async function fetchData(index) {
+                        const registerName = ` ${index + 1}`; // 根据索引生成对应的registerName
+                        const moistureUrl = `http://111.229.165.11:5194/weatherforecast/soilMoistureAverage?StartDate=${startDate}&EndDate=${endDate}`; // 实时数据API
+                        const historyUrl = `http://111.229.165.11:5194/WeatherForecast/HisCRMTHDevices?StartDate=${historyStartDate}&EndDate=${historyEndFormatted}`; // 历史数据API
+
+                        try {
+                            // 获取实时数据
+                            const moistureResponse = await fetch(moistureUrl);
+                            const moistureData = await moistureResponse.json();
+
+
+                            // 创建实时数据集
+                            const moisturedatasets = moistureData.map(register => ({
+                                name: register.registerNames, // 获取注册名称
+                                dates: [], // 日期数组
+                                averageHums: [] // 湿度数组
+                            }));
+                            // 填充实时数据集
+                            moistureData.forEach(item => {
+                                const index = moisturedatasets.findIndex(moisturedataset => moisturedataset.name === item.registerNames);
+                                if (index !== -1) {
+                                    moisturedatasets[index].dates.push(item.date); // 添加日期
+                                    moisturedatasets[index].averageHums.push(item.averageHum); // 添加湿度
+                                }
+                            });
+                            console.log(moisturedatasets);
+                            // 获取历史数据
+                            const historyResponse = await fetch(historyUrl);
+                            const historyData = await historyResponse.json();
+
+
+                            // 创建历史数据集
+                            const historydatasets = historyData.map(register => ({
+                                name: register.registerNames, // 获取注册名称
+                                dates: [], // 日期数组
+                                averageHums: [] // 湿度数组
+                            }));
+                            // 填充历史数据集
+                            historyData.forEach(item => {
+                                const index = historydatasets.findIndex(historydataset => historydataset.name === item.registerNames);
+                                if (index !== -1) {
+                                    historydatasets[index].dates.push(item.date); // 添加日期
+                                    historydatasets[index].averageHums.push(item.averageHum); // 添加湿度
+                                }
+                            });
+                            console.log(historydatasets);
+                            // 绘制图表
+                            const ctx = document.getElementById(`chart${index + 1}`).getContext('2d');
+                            new Chart(ctx, {
+                                type: 'line', // 图表类型
+                                data: {
+                                    labels: moisturedatasets[index].dates, // X轴标签为实时数据的日期
+                                    datasets: [
+                                        {
+                                            label: `实时湿度 - ${registerName}`, // 实时湿度数据集
+                                            data: moisturedatasets[index].averageHums, // Y轴数据为实时湿度
+                                            borderColor: 'rgba(75, 192, 192, 1)', // 实时湿度边框颜色
+                                            backgroundColor: 'rgba(75, 192, 192, 0.2)', // 实时湿度背景颜色
+                                            fill: true,
+                                        },
+                                        {
+                                            label: `历史湿度 - ${registerName}`, // 历史湿度数据集
+                                            data: historydatasets[index].averageHums, // Y轴数据为历史湿度
+                                            borderColor: 'rgb(241,196,12)', // 历史湿度边框颜色
+                                            backgroundColor: 'rgba(95,133,28,0.2)', // 历史湿度背景颜色
+                                            fill: true,
+                                        }
+                                    ]
+                                },
+                                options: {
+                                    responsive: true, // 响应式图表
+                                    scales: {
+                                        x: {
+                                            title: {
+                                                display: true,
+                                                text: '日期' // X轴标题
+                                            }
+                                        },
+                                        y: {
+                                            title: {
+                                                display: true,
+                                                text: '湿度' // Y轴标题
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        } catch (error) {
+                            console.error('获取数据时出错:', error); // 错误处理
+                        }
+                    }
+                    // 初始化第一个选项卡的数据
+                    // 初始化所有选项卡的数据
+                    for (let i = 0; i < tabs.length; i++) {
+                        fetchData(i);
+                    }
+                </script>
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+icfile.net/Chart.js/3.9.1/chart.js"></script>
+<script src="js/jquery/jQuery-2.2.0.min.js"></script>
+<!--<script src="js/echarts-all.js"></script>-->
+<script src="js/base.js"></script>
+<script src="js/static.js"></script>
+
+</body>
+</html>
