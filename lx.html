@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微信登录</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .wechat-login-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #1AAD19;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .wechat-login-btn img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+        .wechat-login-btn:hover {
+            background-color: #128912;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>登录</h1>
+        <a class="wechat-login-btn" href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=YOUR_APP_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code&scope=snsapi_login#wechat_redirect">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/WeChat_Logo.png" alt="WeChat Logo">
+            使用微信登录
+        </a>
+    </div>
+</body>
+</html>
